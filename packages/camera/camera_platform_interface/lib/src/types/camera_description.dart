@@ -4,6 +4,12 @@
 
 import 'package:flutter/foundation.dart';
 
+enum SensorTimestampSource {
+  INVALID,
+  UNKNOWN,
+  REALTIME,
+}
+
 /// The direction the camera is facing.
 enum CameraLensDirection {
   /// Front facing camera (a user looking at the screen is seen by the camera).
@@ -22,12 +28,15 @@ class CameraDescription {
   /// Creates a new camera description with the given properties.
   const CameraDescription({
     required this.name,
+    required this.timestampSource,
     required this.lensDirection,
     required this.sensorOrientation,
   });
 
   /// The name of the camera device.
   final String name;
+
+  final SensorTimestampSource timestampSource;
 
   /// The direction the camera is facing.
   final CameraLensDirection lensDirection;
@@ -47,6 +56,7 @@ class CameraDescription {
       other is CameraDescription &&
           runtimeType == other.runtimeType &&
           name == other.name &&
+          timestampSource == other.timestampSource &&
           lensDirection == other.lensDirection;
 
   @override
@@ -55,6 +65,6 @@ class CameraDescription {
   @override
   String toString() {
     return '${objectRuntimeType(this, 'CameraDescription')}('
-        '$name, $lensDirection, $sensorOrientation)';
+        '$name, $timestampSource, $lensDirection, $sensorOrientation)';
   }
 }

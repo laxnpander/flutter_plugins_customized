@@ -113,6 +113,19 @@ public final class CameraUtils {
       int sensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
       details.put("sensorOrientation", sensorOrientation);
 
+      int timestampSource = characteristics.get(CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE);
+      switch (timestampSource) {
+        case CameraMetadata.SENSOR_INFO_TIMESTAMP_SOURCE_UNKNOWN:
+          details.put("timestampSource", "unknown");
+          break;
+        case CameraMetadata.SENSOR_INFO_TIMESTAMP_SOURCE_REALTIME:
+          details.put("timestampSource", "realtime");
+          break;
+        default:
+          details.put("timestampSource", "invalid");
+          break;
+      }
+
       int lensFacing = characteristics.get(CameraCharacteristics.LENS_FACING);
       switch (lensFacing) {
         case CameraMetadata.LENS_FACING_FRONT:

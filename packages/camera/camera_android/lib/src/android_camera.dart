@@ -14,8 +14,7 @@ import 'package:stream_transform/stream_transform.dart';
 import 'type_conversion.dart';
 import 'utils.dart';
 
-const MethodChannel _channel =
-    MethodChannel('plugins.flutter.io/camera_android');
+const MethodChannel _channel = MethodChannel('plugins.flutter.io/camera_android');
 
 /// The Android implementation of [CameraPlatform] that uses method channels.
 class AndroidCamera extends CameraPlatform {
@@ -29,8 +28,7 @@ class AndroidCamera extends CameraPlatform {
   /// The name of the channel that device events from the platform side are
   /// sent on.
   @visibleForTesting
-  static const String deviceEventChannelName =
-      'plugins.flutter.io/camera_android/fromPlatform';
+  static const String deviceEventChannelName = 'plugins.flutter.io/camera_android/fromPlatform';
 
   /// The controller we need to broadcast the different events coming
   /// from handleMethodCall, specific to camera events.
@@ -65,14 +63,13 @@ class AndroidCamera extends CameraPlatform {
   StreamController<CameraImageData>? _frameStreamController;
 
   Stream<CameraEvent> _cameraEvents(int cameraId) =>
-      cameraEventStreamController.stream
-          .where((CameraEvent event) => event.cameraId == cameraId);
+      cameraEventStreamController.stream.where((CameraEvent event) => event.cameraId == cameraId);
 
   @override
   Future<List<CameraDescription>> availableCameras() async {
     try {
-      final List<Map<dynamic, dynamic>>? cameras = await _channel
-          .invokeListMethod<Map<dynamic, dynamic>>('availableCameras');
+      final List<Map<dynamic, dynamic>>? cameras =
+          await _channel.invokeListMethod<Map<dynamic, dynamic>>('availableCameras');
 
       if (cameras == null) {
         return <CameraDescription>[];
@@ -81,8 +78,8 @@ class AndroidCamera extends CameraPlatform {
       return cameras.map((Map<dynamic, dynamic> camera) {
         return CameraDescription(
           name: camera['name']! as String,
-          lensDirection:
-              parseCameraLensDirection(camera['lensFacing']! as String),
+          timestampSource: parseSensorTimestampSource(camera['timestampSource']! as String),
+          lensDirection: parseCameraLensDirection(camera['lensFacing']! as String),
           sensorOrientation: camera['sensorOrientation']! as int,
         );
       }).toList();
@@ -98,12 +95,11 @@ class AndroidCamera extends CameraPlatform {
     bool enableAudio = false,
   }) async {
     try {
-      final Map<String, dynamic>? reply = await _channel
-          .invokeMapMethod<String, dynamic>('create', <String, dynamic>{
+      final Map<String, dynamic>? reply =
+          await _channel.invokeMapMethod<String, dynamic>('create', <String, dynamic>{
         'cameraName': cameraDescription.name,
-        'resolutionPreset': resolutionPreset != null
-            ? _serializeResolutionPreset(resolutionPreset)
-            : null,
+        'resolutionPreset':
+            resolutionPreset != null ? _serializeResolutionPreset(resolutionPreset) : null,
         'enableAudio': enableAudio,
       });
 
@@ -121,8 +117,7 @@ class AndroidCamera extends CameraPlatform {
     _channels.putIfAbsent(cameraId, () {
       final MethodChannel channel =
           MethodChannel('plugins.flutter.io/camera_android/camera$cameraId');
-      channel.setMethodCallHandler(
-          (MethodCall call) => handleCameraMethodCall(call, cameraId));
+      channel.setMethodCallHandler((MethodCall call) => handleCameraMethodCall(call, cameraId));
       return channel;
     });
 
@@ -199,8 +194,7 @@ class AndroidCamera extends CameraPlatform {
 
   @override
   Stream<DeviceOrientationChangedEvent> onDeviceOrientationChanged() {
-    return _deviceEventStreamController.stream
-        .whereType<DeviceOrientationChangedEvent>();
+    return _deviceEventStreamController.stream.whereType<DeviceOrientationChangedEvent>();
   }
 
   @override
@@ -247,10 +241,8 @@ class AndroidCamera extends CameraPlatform {
       _channel.invokeMethod<void>('prepareForVideoRecording');
 
   @override
-  Future<void> startVideoRecording(int cameraId,
-      {Duration? maxVideoDuration}) async {
-    return startVideoCapturing(
-        VideoCaptureOptions(cameraId, maxDuration: maxVideoDuration));
+  Future<void> startVideoRecording(int cameraId, {Duration? maxVideoDuration}) async {
+    return startVideoCapturing(VideoCaptureOptions(cameraId, maxDuration: maxVideoDuration));
   }
 
   @override
@@ -294,8 +286,7 @@ class AndroidCamera extends CameraPlatform {
       );
 
   @override
-  Future<void> resumeVideoRecording(int cameraId) =>
-      _channel.invokeMethod<void>(
+  Future<void> resumeVideoRecording(int cameraId) => _channel.invokeMethod<void>(
         'resumeVideoRecording',
         <String, dynamic>{'cameraId': cameraId},
       );
@@ -307,8 +298,7 @@ class AndroidCamera extends CameraPlatform {
     return _frameStreamController!.stream;
   }
 
-  StreamController<CameraImageData> _installStreamController(
-      {Function()? onListen}) {
+  StreamController<CameraImageData> _installStreamController({Function()? onListen}) {
     _frameStreamController = StreamController<CameraImageData>(
       onListen: onListen ?? () {},
       onPause: _onFrameStreamPauseResume,
@@ -332,8 +322,7 @@ class AndroidCamera extends CameraPlatform {
         EventChannel('plugins.flutter.io/camera_android/imageStream');
     _platformImageStreamSubscription =
         cameraEventChannel.receiveBroadcastStream().listen((dynamic imageData) {
-      _frameStreamController!
-          .add(cameraImageFromPlatformData(imageData as Map<dynamic, dynamic>));
+      _frameStreamController!.add(cameraImageFromPlatformData(imageData as Map<dynamic, dynamic>));
     });
   }
 
@@ -345,13 +334,12 @@ class AndroidCamera extends CameraPlatform {
   }
 
   void _onFrameStreamPauseResume() {
-    throw CameraException('InvalidCall',
-        'Pause and resume are not supported for onStreamedFrameAvailable');
+    throw CameraException(
+        'InvalidCall', 'Pause and resume are not supported for onStreamedFrameAvailable');
   }
 
   @override
-  Future<void> setFlashMode(int cameraId, FlashMode mode) =>
-      _channel.invokeMethod<void>(
+  Future<void> setFlashMode(int cameraId, FlashMode mode) => _channel.invokeMethod<void>(
         'setFlashMode',
         <String, dynamic>{
           'cameraId': cameraId,
@@ -360,8 +348,7 @@ class AndroidCamera extends CameraPlatform {
       );
 
   @override
-  Future<void> setExposureMode(int cameraId, ExposureMode mode) =>
-      _channel.invokeMethod<void>(
+  Future<void> setExposureMode(int cameraId, ExposureMode mode) => _channel.invokeMethod<void>(
         'setExposureMode',
         <String, dynamic>{
           'cameraId': cameraId,
@@ -429,8 +416,7 @@ class AndroidCamera extends CameraPlatform {
   }
 
   @override
-  Future<void> setFocusMode(int cameraId, FocusMode mode) =>
-      _channel.invokeMethod<void>(
+  Future<void> setFocusMode(int cameraId, FocusMode mode) => _channel.invokeMethod<void>(
         'setFocusMode',
         <String, dynamic>{
           'cameraId': cameraId,

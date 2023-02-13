@@ -6,6 +6,18 @@ import 'package:flutter/services.dart';
 
 import '../../camera_platform_interface.dart';
 
+SensorTimestampSource parseSensorTimestampSource(String string) {
+  switch (string) {
+    case 'invalid':
+      return SensorTimestampSource.INVALID;
+    case 'unknown':
+      return SensorTimestampSource.UNKNOWN;
+    case 'realtime':
+      return SensorTimestampSource.REALTIME;
+  }
+  throw ArgumentError('Unknown SensorTimestampSource value');
+}
+
 /// Parses a string into a corresponding CameraLensDirection.
 CameraLensDirection parseCameraLensDirection(String string) {
   switch (string) {

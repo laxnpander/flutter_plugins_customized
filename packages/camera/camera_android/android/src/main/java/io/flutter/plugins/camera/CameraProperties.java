@@ -259,6 +259,8 @@ public interface CameraProperties {
    * @return int[] List of noise reduction modes that are supported by this camera device.
    */
   int[] getAvailableNoiseReductionModes();
+
+  int getSensorTimestampSource();
 }
 
 /**
@@ -382,5 +384,11 @@ class CameraPropertiesImpl implements CameraProperties {
   public int[] getAvailableNoiseReductionModes() {
     return cameraCharacteristics.get(
         CameraCharacteristics.NOISE_REDUCTION_AVAILABLE_NOISE_REDUCTION_MODES);
+  }
+
+  @Override
+  public int getSensorTimestampSource() {
+    return cameraCharacteristics.get(
+        CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE);
   }
 }
