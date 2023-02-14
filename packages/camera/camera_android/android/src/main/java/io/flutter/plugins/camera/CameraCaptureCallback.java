@@ -74,9 +74,11 @@ class CameraCaptureCallback extends CaptureCallback {
 
     // Update capture properties
     if (result instanceof TotalCaptureResult) {
+      Long timestamp = result.get(CaptureResult.SENSOR_TIMESTAMP);
       Float lensAperture = result.get(CaptureResult.LENS_APERTURE);
       Long sensorExposureTime = result.get(CaptureResult.SENSOR_EXPOSURE_TIME);
       Integer sensorSensitivity = result.get(CaptureResult.SENSOR_SENSITIVITY);
+      this.captureProps.setLastTimestamp(timestamp);
       this.captureProps.setLastLensAperture(lensAperture);
       this.captureProps.setLastSensorExposureTime(sensorExposureTime);
       this.captureProps.setLastSensorSensitivity(sensorSensitivity);

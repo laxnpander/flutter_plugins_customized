@@ -119,11 +119,12 @@ ImageFormatGroup _asImageFormatGroup(dynamic rawFormat) {
 class CameraImage {
   /// Creates a [CameraImage] from the platform interface version.
   CameraImage.fromPlatformInterface(CameraImageData data)
-      : format = ImageFormat._fromPlatformInterface(data.format),
+      : timestamp = data.timestamp,
+        format = ImageFormat._fromPlatformInterface(data.format),
         height = data.height,
         width = data.width,
-        planes = List<Plane>.unmodifiable(data.planes.map<Plane>(
-            (CameraImagePlane plane) => Plane._fromPlatformInterface(plane))),
+        planes = List<Plane>.unmodifiable(data.planes
+            .map<Plane>((CameraImagePlane plane) => Plane._fromPlatformInterface(plane))),
         lensAperture = data.lensAperture,
         sensorExposureTime = data.sensorExposureTime,
         sensorSensitivity = data.sensorSensitivity;
@@ -131,15 +132,17 @@ class CameraImage {
   /// Creates a [CameraImage] from method channel data.
   @Deprecated('Use fromPlatformInterface instead')
   CameraImage.fromPlatformData(Map<dynamic, dynamic> data)
-      : format = ImageFormat._fromPlatformData(data['format']),
+      : timestamp = data['timestamp'] as int,
+        format = ImageFormat._fromPlatformData(data['format']),
         height = data['height'] as int,
         width = data['width'] as int,
         lensAperture = data['lensAperture'] as double?,
         sensorExposureTime = data['sensorExposureTime'] as int?,
         sensorSensitivity = data['sensorSensitivity'] as double?,
-        planes = List<Plane>.unmodifiable((data['planes'] as List<dynamic>)
-            .map<Plane>((dynamic planeData) =>
-                Plane._fromPlatformData(planeData as Map<dynamic, dynamic>)));
+        planes = List<Plane>.unmodifiable((data['planes'] as List<dynamic>).map<Plane>(
+            (dynamic planeData) => Plane._fromPlatformData(planeData as Map<dynamic, dynamic>)));
+
+  final int timestamp;
 
   /// Format of the image provided.
   ///

@@ -14,16 +14,16 @@ import '../types/types.dart';
 /// [CameraImageData].
 CameraImageData cameraImageFromPlatformData(Map<dynamic, dynamic> data) {
   return CameraImageData(
+      timestamp: data['timestamp'] as int,
       format: _cameraImageFormatFromPlatformData(data['format']),
       height: data['height'] as int,
       width: data['width'] as int,
       lensAperture: data['lensAperture'] as double?,
       sensorExposureTime: data['sensorExposureTime'] as int?,
       sensorSensitivity: data['sensorSensitivity'] as double?,
-      planes: List<CameraImagePlane>.unmodifiable(
-          (data['planes'] as List<dynamic>).map<CameraImagePlane>(
-              (dynamic planeData) => _cameraImagePlaneFromPlatformData(
-                  planeData as Map<dynamic, dynamic>))));
+      planes: List<CameraImagePlane>.unmodifiable((data['planes'] as List<dynamic>)
+          .map<CameraImagePlane>((dynamic planeData) =>
+              _cameraImagePlaneFromPlatformData(planeData as Map<dynamic, dynamic>))));
 }
 
 CameraImageFormat _cameraImageFormatFromPlatformData(dynamic data) {

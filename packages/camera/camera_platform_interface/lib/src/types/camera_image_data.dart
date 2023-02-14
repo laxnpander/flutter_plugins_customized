@@ -83,6 +83,7 @@ class CameraImageFormat {
 class CameraImageData {
   /// Creates a new instance with the given format, planes, and metadata.
   const CameraImageData({
+    required this.timestamp,
     required this.format,
     required this.planes,
     required this.height,
@@ -91,6 +92,8 @@ class CameraImageData {
     this.sensorExposureTime,
     this.sensorSensitivity,
   });
+
+  final int timestamp;
 
   /// Format of the image provided.
   ///

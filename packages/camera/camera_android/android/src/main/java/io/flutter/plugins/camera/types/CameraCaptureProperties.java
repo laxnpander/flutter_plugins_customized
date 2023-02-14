@@ -6,9 +6,18 @@ package io.flutter.plugins.camera.types;
 
 public class CameraCaptureProperties {
 
+  private Long lastTimestamp;
   private Float lastLensAperture;
   private Long lastSensorExposureTime;
   private Integer lastSensorSensitivity;
+
+  public Long getLastTimestamp() {
+    return lastTimestamp;
+  }
+
+  public void setLastTimestamp(Long lastTimestamp) {
+    this.lastTimestamp = lastTimestamp;
+  }
 
   /**
    * Gets the last known lens aperture. (As f-stop value)
